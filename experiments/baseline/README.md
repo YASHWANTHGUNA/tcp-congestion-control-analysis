@@ -144,7 +144,7 @@ Filter relevant protocol events
 
 📷 Simulation Panel View
 
-![Simulation Panel](screenshots/simulationpanel.png)
+![Simulation Panel](screenshots/simultationpanel.png)
 10. Key Observations
 
 Initial packet loss was due to ARP resolution, not TCP failure
