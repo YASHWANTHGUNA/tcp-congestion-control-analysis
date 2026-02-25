@@ -1,112 +1,102 @@
-RTT Impact on TCP Performance (Experiment 2)
-1. Objective
+ # RTT Impact on TCP Performance (Experiment 2)
 
-The objective of this experiment is to systematically analyze the impact of Round-Trip Time (RTT) on TCP performance in a controlled client–server network. By introducing an additional routing hop between the sender and receiver, this experiment isolates RTT as the primary variable, enabling a focused study of latency-induced effects on TCP data transmission and acknowledgment behavior.
+## 1. Objective
+The objective of this experiment is to study the effect of **Round-Trip Time (RTT)** on TCP behavior in a client–server network. By introducing an additional routing hop between the client and the server, we analyze how increased RTT influences packet traversal time, acknowledgment delays, and overall TCP responsiveness.
 
-2. Network Topology
+This experiment builds on the baseline TCP setup (Experiment 1) and focuses specifically on **latency-induced performance changes**, without introducing packet loss or congestion.
 
-The experimental topology consists of:
+---
 
-One TCP client (PC0)
+## 2. Network Topology
+The topology consists of:
+- One TCP client (PC0)
+- Two routers (Router0 and Router2)
+- Two switches (Switch0 and Switch1)
+- One TCP server (Server0)
 
-Two routers (Router0, Router2)
+An **additional router hop** is inserted between the client and server to increase RTT while keeping bandwidth and packet loss constant.
 
-Two switches (Switch0, Switch1)
+**Screenshot:**
+- `exp2_topology.png`
 
-One TCP server (Server0)
+---
 
-An intermediate router is inserted between the client and server paths to deliberately increase RTT while keeping bandwidth, packet loss, and congestion constant.
+## 3. Experimental Setup
+- Simulation environment: Cisco Packet Tracer
+- Transport protocol: TCP
+- Simulation mode: Packet-level (Simulation Mode)
+- Traffic type: TCP data with acknowledgments
+- Filters enabled: TCP, HTTP
+- No artificial packet drops or bandwidth throttling applied
 
-Reference Screenshot:
+The experiment observes packet movement and timing at each hop using the Simulation Panel and Event List.
 
-exp2_topology.png
+---
 
-3. Experimental Setup
+## 4. Experiment Procedure
 
-Simulation tool: Cisco Packet Tracer
+### Step 1: TCP Transmission Initiation
+TCP communication is initiated from **PC0** toward **Server0**. The first packet is observed leaving the client and entering the network.
 
-Transport protocol: TCP
+**Screenshot:**
+- `exp2_tcp_start_pc.png`
 
-Simulation mode: Packet-level (Simulation Mode)
+---
 
-Traffic characteristics: TCP data packets with acknowledgments
+### Step 2: Packet Traversal Through Intermediate Router
+The TCP packet traverses the intermediate router (Router0 → Router2). This additional hop introduces extra propagation and processing delay, contributing directly to increased RTT.
 
-Filters enabled: TCP, HTTP
+**Screenshot:**
+- `exp2_tcp_mid_router.png`
 
-No artificial packet drops, congestion, or bandwidth throttling applied
+---
 
-This setup ensures that observed performance changes are attributable solely to increased RTT.
+### Step 3: Packet Arrival at Server
+The TCP packet successfully reaches **Server0**, confirming end-to-end connectivity with increased RTT but without packet loss.
 
-4. Experiment Procedure
-Step 1: TCP Session Initiation
+**Screenshot:**
+- `exp2_tcp_server_reached.png`
 
-A TCP transmission is initiated from the client (PC0) toward the server (Server0). The initial packet departure marks the start of the RTT measurement interval.
+---
 
-Screenshot:
+### Step 4: TCP Acknowledgment Return Path
+The server generates a TCP acknowledgment (ACK), which travels back through the same multi-hop path toward the client. The return ACK experiences similar latency due to the increased RTT.
 
-exp2_tcp_start_pc.png
+**Screenshot:**
+- `exp2_tcp_return_ack.png`
 
-Step 2: Packet Traversal Through Intermediate Router
+---
 
-The TCP data packet traverses the intermediate router, introducing additional propagation and processing delay. This extra hop directly contributes to an increase in RTT.
+### Step 5: RTT Observation Using Event List
+The Simulation Event List is used to observe timestamps for packet transmission and acknowledgment reception. The increased RTT is evident from the time difference between forward data packets and return ACKs.
 
-Screenshot:
+**Screenshot:**
+- `06_event_list_rtt_timing.png`
 
-exp2_tcp_mid_router.png
+---
 
-Step 3: Packet Reception at Server
+## 5. Observations
+- Introducing an additional router increases RTT even in the absence of congestion.
+- TCP acknowledgments are delayed proportionally with the increased RTT.
+- Packet delivery remains reliable, but **response time increases**.
+- Higher RTT directly affects TCP’s effective throughput and responsiveness.
+- No packet loss or retransmissions were observed, isolating RTT as the only influencing factor.
 
-The TCP packet successfully reaches the server, confirming reliable end-to-end delivery despite the increased RTT.
+---
 
-Screenshot:
+## 6. Conclusion
+This experiment demonstrates that **RTT is a critical factor in TCP performance**. Even without packet loss or congestion, increasing RTT results in delayed acknowledgments and slower feedback to the sender. This highlights why long-distance or multi-hop networks experience reduced TCP efficiency and why latency optimization is crucial in real-world networks.
 
-exp2_tcp_server_reached.png
+The results from this experiment form a foundation for further analysis involving packet loss, congestion control, and fairness in subsequent experiments.
 
-Step 4: Acknowledgment Return Path
+---
 
-The server generates a TCP acknowledgment (ACK), which follows the same multi-hop path back to the client. The delayed arrival of the ACK reflects the increased RTT.
+## 7. Screenshots Reference
+All screenshots related to this experiment are available in the `screenshots/` directory:
 
-Screenshot:
-
-exp2_tcp_return_ack.png
-
-Step 5: RTT Measurement Using Simulation Event List
-
-Packet timestamps from the Simulation Event List are examined to measure the delay between data packet transmission and acknowledgment reception, providing a direct visualization of RTT impact.
-
-Screenshot:
-
-06_event_list_rtt_timing.png
-
-5. Observations
-
-Increasing RTT results in delayed acknowledgment reception at the sender.
-
-TCP packet delivery remains reliable, with no packet loss or retransmissions observed.
-
-The sender experiences slower feedback due to increased latency, which can limit effective throughput.
-
-RTT directly influences TCP responsiveness even under ideal, congestion-free conditions.
-
-6. Conclusion
-
-This experiment demonstrates that RTT is a fundamental determinant of TCP performance. Even in the absence of congestion and packet loss, increased RTT leads to delayed acknowledgments and reduced protocol responsiveness. These results emphasize the importance of latency optimization in wide-area and multi-hop networks.
-
-The findings from this experiment provide a foundation for subsequent studies involving packet loss, congestion control algorithms, and fairness analysis.
-
-7. Screenshots Reference
-
-All experiment-related screenshots are available in the screenshots/ directory:
-
-exp2_topology.png
-
-exp2_tcp_start_pc.png
-
-exp2_tcp_mid_router.png
-
-exp2_tcp_server_reached.png
-
-exp2_tcp_return_ack.png
-
-06_event_list_rtt_timing.png
-
+1. `exp2_topology.png`
+2. `exp2_tcp_start_pc.png`
+3. `exp2_tcp_mid_router.png`
+4. `exp2_tcp_server_reached.png`
+5. `exp2_tcp_return_ack.png`
+6. `06_event_list_rtt_timing.png`
