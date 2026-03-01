@@ -85,7 +85,7 @@ Observation:
 ### Step 6: Interface Shutdown Confirmation
 The interface responsible for packet loss is explicitly shown in shutdown state.
 
-![Interface Shutdown](screenshots/07_interface_shutdown.png)
+![Interface Shutdown](screenshots/07_interface_shutdown_config.png)
 
 ---
 
